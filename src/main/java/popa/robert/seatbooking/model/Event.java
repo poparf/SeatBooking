@@ -1,0 +1,28 @@
+package popa.robert.seatbooking.model;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.sql.Timestamp;
+
+@Getter
+@Setter
+@Entity
+@Table(name="EVENT")
+public class Event {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Integer eventId;  // camelCase
+
+    private Timestamp startTime;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="room_name", referencedColumnName = "name")
+    private Room room;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="movie_title", referencedColumnName = "title")
+    private Movie movie;
+}

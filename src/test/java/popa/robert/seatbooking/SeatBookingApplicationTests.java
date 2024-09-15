@@ -1,4 +1,4 @@
-package com.example.seatbooking;
+package popa.robert.seatbooking;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

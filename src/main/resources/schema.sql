@@ -1,0 +1,64 @@
+-- --CREATE TYPE GENRE_ENUM AS ENUM ('HORROR', 'SCI-FI', 'COMEDY', 'ACTION');
+--
+-- CREATE TABLE IF NOT EXISTS MOVIE (
+--                                      TITLE TEXT NOT NULL PRIMARY KEY,
+--                                      DESCRIPTION TEXT NOT NULL,
+--                                      PLAY_TIME INTERVAL,
+--                                      POSTER_IMAGE BYTEA,
+--                                      GENRE GENRE_ENUM
+-- );
+--
+-- CREATE TABLE IF NOT EXISTS ROOM (
+--                                     NAME TEXT PRIMARY KEY,
+--                                     MAX_SEATS NUMERIC
+-- );
+--
+-- CREATE TABLE IF NOT EXISTS EVENT (
+--                        EVENT_ID SERIAL PRIMARY KEY,
+--                        START_TIME timestamp NOT NULL,
+--                        ROOM_NAME TEXT NOT NULL REFERENCES ROOM(NAME),
+--                        MOVIE_TITLE TEXT NOT NULL REFERENCES MOVIE(TITLE)
+-- );
+-- --
+-- -- CREATE OR REPLACE FUNCTION pc_prevent_event_overlap() RETURNS trigger
+-- -- AS $$
+-- -- DECLARE
+-- -- BEGIN
+-- --     IF EXISTS (
+-- --         SELECT 1 FROM EVENT E
+-- --         JOIN MOVIE M ON E.MOVIE_TITLE = M.TITLE
+-- --         WHERE E.ROOM_NAME = NEW.ROOM_NAME
+-- --         AND (SELECT (E.START_TIME, E.START_TIME + M.PLAY_TIME)
+-- --                         OVERLAPS (NEW.START_TIME, NEW.START_TIME + M.PLAY_TIME))
+-- --     ) THEN
+-- --         RAISE EXCEPTION 'EVENT OVERLAPS WITH AN EXISTING EVENT IN THE SAME ROOM';
+-- --     END IF;
+-- --     RETURN NEW;
+-- -- END;
+-- -- $$
+-- -- LANGUAGE plpgsql;
+-- --
+-- -- CREATE OR REPLACE TRIGGER PREVENT_EVENT_OVERLAP
+-- -- BEFORE INSERT OR UPDATE ON EVENT
+-- -- FOR EACH ROW
+-- -- EXECUTE PROCEDURE pc_prevent_event_overlap();
+--
+--
+-- CREATE TYPE SEAT_STATUS_ENUM AS ENUM ('AVAILABLE', 'PENDING', 'BOOKED');
+--
+-- CREATE TABLE IF NOT EXISTS SEAT (
+--                                     SEAT_ID SERIAL PRIMARY KEY,
+--                                     ROOM_NAME TEXT NOT NULL REFERENCES ROOM(NAME),
+--                                     STATUS SEAT_STATUS_ENUM NOT NULL,
+--                                     SEAT_NUMBER NUMERIC,
+--                                     UNIQUE (ROOM_NAME, SEAT_NUMBER)
+-- );
+-- CREATE TYPE TICKET_TYPE_ENUM AS ENUM ('ADULT', 'CHILD', 'STUDENT', 'RETIRED', 'STAFF');
+--
+-- CREATE TABLE IF NOT EXISTS TICKET(
+--                                      TICKET_ID uuid primary key,
+--                                      TICKET_TYPE TICKET_TYPE_ENUM,
+--                                      VALUE numeric,
+--                                      EVENT_ID INTEGER REFERENCES EVENT(EVENT_ID),
+--                                      SEAT_ID INTEGER REFERENCES SEAT(SEAT_ID),
+-- );
