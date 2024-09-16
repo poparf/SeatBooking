@@ -5,7 +5,9 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
 
@@ -14,6 +16,8 @@ import java.time.Duration;
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "MOVIE")
 public class Movie {
 
@@ -30,4 +34,5 @@ public class Movie {
 
     @Column(name="POSTER_IMAGE", nullable = false)
     private byte[] posterImage;
+
 }

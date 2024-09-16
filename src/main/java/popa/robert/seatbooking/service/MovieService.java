@@ -1,5 +1,6 @@
 package popa.robert.seatbooking.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,12 @@ import java.util.Map;
 @Service
 public class MovieService {
 
+    @Autowired
     private MovieRepository movieRepository;
+
+    public MovieService(MovieRepository movieRepository) {
+        this.movieRepository = movieRepository;
+    }
 
     public Movie createMovie(MovieDTO movieDTO) throws IOException{
         Movie movie = new Movie();

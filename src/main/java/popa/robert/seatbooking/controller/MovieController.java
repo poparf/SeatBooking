@@ -61,7 +61,7 @@ public class MovieController {
         }
     }
 
-    @GetMapping("/movies")
+    @GetMapping
     public ResponseEntity<Map<String, Object>> getMovies(@RequestParam(required = false) String title,
                                                  @RequestParam(defaultValue = "0") int page,
                                                  @RequestParam(defaultValue = "5") int size) {
