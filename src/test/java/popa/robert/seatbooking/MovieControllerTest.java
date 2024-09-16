@@ -77,8 +77,8 @@ public class MovieControllerTest {
     @Test
     @WithMockUser(roles = {"ADMIN"})
     public void should_retrieve_page_movies() throws Exception {
-        Movie m1 = new Movie("movie_1", "m_desc_1", Duration.parse("PT2H"), null);
-        Movie m2 = new Movie("movie_2", "m_desc_2", Duration.parse("PT2H30M"), null);
+        Movie m1 = new Movie("movie_1", "m_desc_1", Duration.parse("PT2H"), null, false);
+        Movie m2 = new Movie("movie_2", "m_desc_2", Duration.parse("PT2H30M"), null, false);
 
         Page<Movie> moviePage = new PageImpl<>(List.of(m1,m2), PageRequest.of(0, 2), 2);
         Mockito.when(movieRepository.findAll(Mockito.any(Pageable.class))).thenReturn(moviePage);

@@ -13,8 +13,11 @@ import lombok.Setter;
 @Table(name="ROOM")
 public class Room {
     @Id
-    @Column(name = "NAME")
+    @Column(name = "NAME", unique = true)
     private String name;
     @Column(name = "MAX_SEATS")
-    private Integer max_seats;
+    private Integer maxSeats;
+
+    @Column(name = "DELETED", nullable = false)
+    private boolean deleted;
 }

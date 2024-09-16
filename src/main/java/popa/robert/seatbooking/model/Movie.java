@@ -35,4 +35,6 @@ public class Movie {
     @Column(name="POSTER_IMAGE", nullable = false)
     private byte[] posterImage;
 
+    @Column(name="DELETED", nullable = false)
+    private boolean deleted;
 }

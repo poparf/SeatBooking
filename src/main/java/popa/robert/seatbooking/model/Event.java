@@ -14,7 +14,7 @@ public class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer eventId;  // camelCase
+    private Integer eventId;
 
     private Timestamp startTime;
 

@@ -7,8 +7,11 @@ import popa.robert.seatbooking.model.Movie;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface MovieRepository extends JpaRepository<Movie,String> {
-    Page<Movie> findAllByTitle(String title, Pageable pageable);
+    Page<Movie> findAllByTitleAndDeleted(String title, boolean isDeleted, Pageable pageable);
+    int updateDeletedByTitle(String title, Boolean deleted);
+    Optional<Movie> findByTitleAndDeleted(String title, boolean isDeleted);
 }

@@ -32,6 +32,7 @@ public class MovieService {
         movie.setDescription(movieDTO.getDescription());
         movie.setPlayTime(Duration.parse(movieDTO.getPlayTime()));
         movie.setPosterImage(movieDTO.getPosterImage().getBytes());
+        movie.setDeleted(false);
         return movie;
     }
 
@@ -40,7 +41,7 @@ public class MovieService {
         if(title == null) {
             pageMovies = movieRepository.findAll(pageable);
         } else {
-            pageMovies = movieRepository.findAllByTitle(title, pageable);
+            pageMovies = movieRepository.findAllByTitleAndDeleted(title, false, pageable);
         }
         List<Movie> movies = pageMovies.getContent();
         Map<String, Object> res = new HashMap<>();

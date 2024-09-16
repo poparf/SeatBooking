@@ -16,10 +16,7 @@ import popa.robert.seatbooking.service.MovieService;
 import java.io.IOException;
 import java.net.URI;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 // hasAuthority("ROLE_ADMIN")
 @RestController
@@ -35,9 +32,11 @@ public class MovieController {
      */
 
     private final MovieService movieService;
+    private final MovieRepository movieRepository;
 
-    public MovieController(MovieService movieService) {
+    public MovieController(MovieService movieService, MovieRepository movieRepository) {
         this.movieService = movieService;
+        this.movieRepository = movieRepository;
     }
 
     @GetMapping("/test")
@@ -68,5 +67,24 @@ public class MovieController {
 
         var res = movieService.createMoviePage(title, PageRequest.of(page, size));
         return ResponseEntity.ok(res);
+    }
+
+    // What will happen with the events associated with this movie ?
+    // Let s do a soft delete by setting a boolean deleted value to true
+    @DeleteMapping("/{title}")
+    public ResponseEntity<Void> deleteMovie(@PathVariable String title) {
+        Optional<Movie> movie = movieRepository.findByTitleAndDeleted(title, false);
+
+        if(movie.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        int updatedCount = movieRepository.updateDeletedByTitle(title, true);
+
+        if(updatedCount == 0) {
+            return ResponseEntity.internalServerError().build();
+        }
+
+        return ResponseEntity.noContent().build();
     }
 }
