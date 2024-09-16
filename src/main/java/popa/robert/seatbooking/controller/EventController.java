@@ -8,13 +8,16 @@ import popa.robert.seatbooking.DTO.EventDTO;
 import popa.robert.seatbooking.exceptions.NotFoundException;
 import popa.robert.seatbooking.exceptions.RangeConstraintException;
 import popa.robert.seatbooking.model.Event;
+import popa.robert.seatbooking.model.Ticket;
 import popa.robert.seatbooking.repository.EventRepository;
 import popa.robert.seatbooking.service.EventService;
+import popa.robert.seatbooking.service.TicketService;
 
 import java.net.URI;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -25,10 +28,12 @@ public class EventController {
 
     private final EventRepository eventRepository;
     private final EventService eventService;
+    private final TicketService ticketService;
 
-    public EventController(EventRepository eventRepository, EventService eventService) {
+    public EventController(EventRepository eventRepository, EventService eventService, TicketService ticketService) {
         this.eventRepository = eventRepository;
         this.eventService = eventService;
+        this.ticketService = ticketService;
     }
 
     // event.getStartTime().toLocalDateTime().format(DateTimeFormatter.ISO_DATE_TIME)
@@ -65,5 +70,23 @@ public class EventController {
                 Timestamp.valueOf(startingTime));
 
         return event.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{eventId}/tickets")
+    public ResponseEntity<List<Ticket>> getAllTicketsFromAnEvent(
+            @PathVariable Integer eventId) {
+
+        try {
+            List<Ticket> tickets = ticketService.getAllTicketsFromAnEvent(eventId);
+            if(tickets.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            return ResponseEntity.ok(tickets);
+
+        } catch (NotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+
     }
 }

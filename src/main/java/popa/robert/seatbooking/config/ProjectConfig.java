@@ -44,6 +44,10 @@ public class ProjectConfig {
                         .requestMatchers(HttpMethod.PATCH, "/api/seats/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.GET,"/api/seats/**").permitAll()
 
+                        .requestMatchers(HttpMethod.GET, "/api/tickets/*").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/tickets").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+
+
                         .anyRequest().permitAll());
         return http.build();
     }

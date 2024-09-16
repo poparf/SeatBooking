@@ -29,7 +29,7 @@ public class SeatStatusScheduler {
 
             for (Seat s :
                     pendingSeats) {
-                seatRepository.updateStatusByRoomNameAndSeatNumber(s.getRoom(), s.getSeatNumber(), SeatStatus.AVAILABLE);
+                seatRepository.updateStatusByRoomAndSeatNumber(s.getRoom(), s.getSeatNumber(), SeatStatus.AVAILABLE);
             }
         }
     }

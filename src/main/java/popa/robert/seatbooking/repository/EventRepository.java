@@ -18,4 +18,5 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     int setEventDeletedByMovie(@Param("movie") Movie movie);
     List<Event> findAllByRoomName(String room_name);
     Optional<Event> findEventByRoomNameAndStartingTime(String room_name, Timestamp startingTime);
+    Optional<Event> findEventByEventId(Integer eventId);
 }

@@ -17,12 +17,15 @@ public interface SeatRepository extends CrudRepository<Seat, Integer> {
     List<Seat> findSeatsByRoomName(String room_name);
 
     @Query("UPDATE Seat s SET s.status = :seatStatus WHERE s.room = :room and s.seatNumber = :seatNumber")
-    int updateStatusByRoomNameAndSeatNumber(@Param("room") Room room,
+    int updateStatusByRoomAndSeatNumber(@Param("room") Room room,
                                              @Param("seatNumber") Integer seatNumber,
                                              @Param("seatStatus") SeatStatus status);
 
     @Query("SELECT s FROM Seat s WHERE s.status = 'PENDING' AND s.modifiedTimestamp < :threshold")
     List<Seat> findPendingSeatsSince(Instant threshold);
+
+
+    Optional<Seat> findSeatByRoomNameAndSeatNumber(String room_name, Integer seatNumber);
 
     int countSeatsByStatus(SeatStatus status);
 }

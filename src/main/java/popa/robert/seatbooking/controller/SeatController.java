@@ -90,7 +90,7 @@ public class SeatController {
         if(actualStatus.equals(SeatStatus.AVAILABLE)) {
             Optional<Room> r = roomRepository.findByName(roomName);
             if(r.isPresent()) {
-                seatRepository.updateStatusByRoomNameAndSeatNumber(r.get(), seatNumber, SeatStatus.PENDING);
+                seatRepository.updateStatusByRoomAndSeatNumber(r.get(), seatNumber, SeatStatus.PENDING);
                 return ResponseEntity.ok(SeatStatus.PENDING);
             } else {
                 return ResponseEntity.badRequest().body(actualStatus);
