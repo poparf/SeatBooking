@@ -14,7 +14,7 @@ public class Seat {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer seatId;  // Follow camelCase
+    private Integer seatId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_name", referencedColumnName = "name")

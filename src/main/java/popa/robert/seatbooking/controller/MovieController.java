@@ -1,10 +1,9 @@
 package popa.robert.seatbooking.controller;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import popa.robert.seatbooking.DTO.MovieDTO;
 import popa.robert.seatbooking.model.Movie;
+import popa.robert.seatbooking.repository.EventRepository;
 import popa.robert.seatbooking.repository.MovieRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,7 +14,6 @@ import popa.robert.seatbooking.service.MovieService;
 
 import java.io.IOException;
 import java.net.URI;
-import java.time.Duration;
 import java.util.*;
 
 // hasAuthority("ROLE_ADMIN")
@@ -33,15 +31,12 @@ public class MovieController {
 
     private final MovieService movieService;
     private final MovieRepository movieRepository;
+    private final EventRepository eventRepository;
 
-    public MovieController(MovieService movieService, MovieRepository movieRepository) {
+    public MovieController(MovieService movieService, MovieRepository movieRepository, EventRepository eventRepository) {
         this.movieService = movieService;
         this.movieRepository = movieRepository;
-    }
-
-    @GetMapping("/test")
-    public ResponseEntity<Void> testMapping() {
-        return ResponseEntity.ok().build();
+        this.eventRepository = eventRepository;
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -85,6 +80,8 @@ public class MovieController {
             return ResponseEntity.internalServerError().build();
         }
 
+        // Update deleted to all events attributed to this movie
+        eventRepository.updateDeletedByMovie(movie.get(), true);
         return ResponseEntity.noContent().build();
     }
 }

@@ -2,7 +2,9 @@ package popa.robert.seatbooking;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.With;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -20,14 +22,16 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import popa.robert.seatbooking.controller.MovieController;
+import popa.robert.seatbooking.model.Event;
 import popa.robert.seatbooking.model.Movie;
+import popa.robert.seatbooking.model.Room;
+import popa.robert.seatbooking.repository.EventRepository;
 import popa.robert.seatbooking.repository.MovieRepository;
 
+import java.sql.Timestamp;
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -43,6 +47,9 @@ public class MovieControllerTest {
 
     @MockBean
     private MovieRepository movieRepository;
+
+    @MockBean
+    private EventRepository eventRepository;
 
     private final String baseUrl = "/api/movies";
 
@@ -105,5 +112,23 @@ public class MovieControllerTest {
         assertEquals("movie_2", returnedMovies.get(1).get("title"));
         assertEquals(1, map.get("totalPages"));
         assertEquals(0, map.get("currentPage"));
+    }
+
+
+    @Test
+    @Disabled
+    @WithMockUser(roles = {"ADMIN"})
+    public void should_delete_movie_and_events_associated() {
+        Movie m1 = new Movie("M1", "D1", Duration.parse("PT2H"), null, false);
+        Room r1 = new Room("R1", 25, false);
+        Event e1 = new Event(1, Timestamp.valueOf(LocalDateTime.now()), r1, m1, false);
+
+        Mockito.when(movieRepository.findByTitleAndDeleted(Mockito.any(String.class), false))
+                .thenReturn(Optional.of(m1));
+
+        Mockito.when(movieRepository.updateDeletedByTitle(Mockito.any(String.class), false))
+                .thenReturn(1);
+
+        // TODO-TEST: Finish this... Make sure events are deleted by movies.
     }
 }

@@ -27,7 +27,11 @@ public class ProjectConfig {
                     .oauth2ResourceServer(c ->
                             c.jwt(j ->
                                     j.jwkSetUri(keySetUri)))
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/admin/v1/**").hasAuthority("ROLE_ADMIN")
+                .authorizeHttpRequests(auth -> auth
+                                .requestMatchers("/api/movies/**").hasAuthority("ROLE_ADMIN")
+                                .requestMatchers("/api/rooms/**").hasAuthority("ROLE_ADMIN")
+                                .requestMatchers("/api/events/**").hasAuthority("ROLE_ADMIN")
+                                .requestMatchers("/api/seats/**").hasAuthority("ROLE_ADMIN")
                         .anyRequest().permitAll());
         return http.build();
     }

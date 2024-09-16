@@ -1,7 +1,9 @@
 package popa.robert.seatbooking.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Timestamp;
@@ -9,6 +11,8 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name="EVENT")
 public class Event {
 
@@ -25,4 +29,7 @@ public class Event {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="movie_title", referencedColumnName = "title")
     private Movie movie;
+
+    @Column(name = "DELETED", nullable = false)
+    private boolean deleted;
 }
