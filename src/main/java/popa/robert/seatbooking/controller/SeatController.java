@@ -23,11 +23,13 @@ public class SeatController {
 
     private SeatRepository seatRepository;
     private SeatService seatService;
+    private RoomRepository roomRepository;
 
 
-    public SeatController(SeatRepository seatRepository, SeatService seatService) {
+    public SeatController(SeatRepository seatRepository, SeatService seatService, RoomRepository roomRepository) {
         this.seatRepository = seatRepository;
         this.seatService = seatService;
+        this.roomRepository = roomRepository;
     }
 
     @PostMapping
@@ -64,6 +66,38 @@ public class SeatController {
         }
 
         return ResponseEntity.ok(seats);
+    }
+
+
+    @PatchMapping("/{roomName}/{seatNumber}")
+    public ResponseEntity<SeatStatus> updateSeatAvailability(@PathVariable String roomName,
+                                                         @PathVariable Integer seatNumber,
+                                                         @RequestBody SeatStatus status) {
+
+        Optional<SeatStatus> optionalActualStatus = seatRepository.findSeatStatusByRoomNameAndSeatNumber(roomName,seatNumber);
+        if(optionalActualStatus.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        SeatStatus actualStatus = optionalActualStatus.get();
+        /*
+        Possible scenarios:
+        Available -> Pending
+        Pending -> Available // in case users cancels checkout
+        Pending -> Booked // in case users succeeds with checkout
+         */
+        // Check if it is pending or booked   ( changing to booked is done automatically after checkout so not here)
+        // if yes refuse request
+        if(actualStatus.equals(SeatStatus.AVAILABLE)) {
+            Optional<Room> r = roomRepository.findByName(roomName);
+            if(r.isPresent()) {
+                seatRepository.updateStatusByRoomNameAndSeatNumber(r.get(), seatNumber, SeatStatus.PENDING);
+                return ResponseEntity.ok(SeatStatus.PENDING);
+            } else {
+                return ResponseEntity.badRequest().body(actualStatus);
+            }
+        } else {
+            return ResponseEntity.badRequest().body(actualStatus);
+        }
     }
 
 }

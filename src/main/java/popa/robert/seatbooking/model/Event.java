@@ -20,7 +20,7 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer eventId;
 
-    private Timestamp startTime;
+    private Timestamp startingTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="room_name", referencedColumnName = "name")

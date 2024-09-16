@@ -3,6 +3,7 @@ package popa.robert.seatbooking.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -28,10 +29,21 @@ public class ProjectConfig {
                             c.jwt(j ->
                                     j.jwkSetUri(keySetUri)))
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/api/movies/**").hasAuthority("ROLE_ADMIN")
-                                .requestMatchers("/api/rooms/**").hasAuthority("ROLE_ADMIN")
-                                .requestMatchers("/api/events/**").hasAuthority("ROLE_ADMIN")
-                                .requestMatchers("/api/seats/**").hasAuthority("ROLE_ADMIN")
+
+                        .requestMatchers(HttpMethod.POST,"/api/movies").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.DELETE,"/api/movies/*").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/api/movies").permitAll()
+
+                        .requestMatchers(HttpMethod.POST,"/api/rooms").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/api/rooms/*").permitAll()
+
+                        .requestMatchers(HttpMethod.POST,"/api/events").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/api/events/*").permitAll()
+
+                        .requestMatchers(HttpMethod.POST,"/api/seats").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/seats/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/api/seats/**").permitAll()
+
                         .anyRequest().permitAll());
         return http.build();
     }

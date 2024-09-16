@@ -52,7 +52,7 @@ public class EventService {
         // in that overlaps with the interval
         // Calculate using movie play_time and event start_time
         // When movie starts
-        Timestamp s2 = Timestamp.from(Instant.now());
+        Timestamp s2 = eventDTO.getStartTime();
         Duration movieDuration = foundMovie.getPlayTime();
         // When movie ends
         Timestamp e2 = new Timestamp(s2.getTime() + movieDuration.toMillis());
@@ -71,14 +71,14 @@ public class EventService {
         // Get only the events that happen today.
         // TODO:This can be optimized using a custom query, instead of selecting all events from a room
         events = events.stream().filter(e ->
-                e.getStartTime().toLocalDateTime().equals(LocalDate.now()))
+                e.getStartingTime().toLocalDateTime().equals(LocalDate.now()))
                 .collect(Collectors.toList());
         for (Event e:
              events) {
             Long otherMovieDuration = e.getMovie().getPlayTime().toMillis();
-            Timestamp s1 = e.getStartTime();
+            Timestamp s1 = e.getStartingTime();
             Timestamp e1 = new Timestamp(
-                    e.getStartTime().getTime() + otherMovieDuration);
+                    e.getStartingTime().getTime() + otherMovieDuration);
 
             if(!(s2.before(s1) && e2.before(s1))
                     || !(s2.after(e1) && e2.after(e1))) {
@@ -91,7 +91,7 @@ public class EventService {
         event.setRoom(foundRoom);
         event.setMovie(foundMovie);
         event.setDeleted(false);
-        event.setStartTime(s2);
+        event.setStartingTime(s2);
         eventRepository.save(event);
         return event;
     }

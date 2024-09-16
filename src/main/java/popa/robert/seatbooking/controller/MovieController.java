@@ -73,15 +73,15 @@ public class MovieController {
         if(movie.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-
-        int updatedCount = movieRepository.updateDeletedByTitle(title, true);
+        Movie foundMovie = movie.get();
+        int updatedCount = movieRepository.setMovieDeleted(foundMovie);
 
         if(updatedCount == 0) {
             return ResponseEntity.internalServerError().build();
         }
 
         // Update deleted to all events attributed to this movie
-        eventRepository.updateDeletedByMovie(movie.get(), true);
+        eventRepository.setEventDeletedByMovie(foundMovie);
         return ResponseEntity.noContent().build();
     }
 }
