@@ -9,3 +9,9 @@ DEMO:
 
 
 ![demo_seat_creation](https://github.com/user-attachments/assets/6af5b92d-3d63-4314-9332-2a22a8e9b42d)
+
+
+
+Database:
+
+![image](https://github.com/user-attachments/assets/652206ca-f808-4209-9b09-4fdd7dd11db6)
