@@ -1,4 +1,4 @@
-package popa.robert.seatbooking;
+package popa.robert.seatbooking.ControllerTests;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
